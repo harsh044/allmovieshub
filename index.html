@@ -5,6 +5,12 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="title" content="AllMoviesHub - Download Bollywood, Hollywood &amp; South Hindi Dubbed Movies in HD">
+	<meta name="keywords"
+		content="AllMoviesHub, AllMovieHub, All Movies Hub, All Movie Hub, All Movie, AllMovies All Movies, HdMoviesHub, HdMovieHub, 300mb Movies, 480p Movies, 720p Movies, Hindi Dubbed Series, 1080p Movies">
+	<meta name="description"
+		content="Download the latest Bollywood, South Hindi Dubbed, and Hollywood movies for free at AllMoviesHub. Your ultimate source for high-quality HD movie downloads.">
+
 	<title>ALLMOVIESHUB</title>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/font-awesome.min.css" rel="stylesheet">
@@ -17,7 +23,7 @@
 
 <body>
 	<section id="header">
-		
+
 		<nav class="navbar navbar-expand-md navbar-light" id="navbar_sticky">
 			<div class="container-fluid">
 				<a class="navbar-brand fs-4 p-0 fw-bold text-white text-uppercase" href="index.html"><i
@@ -38,9 +44,10 @@
 					<ul class="navbar-nav mb-0 ms-auto">
 
 						<li class="nav-item">
-							
+
 							<div class="input-group">
-								<input id="searchInput" type="text" class="form-control border-start-0" placeholder="Search Movie">
+								<input id="searchInput" type="text" class="form-control border-start-0"
+									placeholder="Search Movie">
 								<span class="input-group-btn">
 									<button class="btn btn-primary bg_yell" type="button">
 										<i class="fa fa-search"></i> </button>
@@ -206,7 +213,8 @@
 			<div class="row footer_b1">
 				<div class="col-md-8">
 					<div class="footer_b1l">
-						<p class="mb-0 fs-6 text-muted mt-1">© 2026 ALLMOVIESHUB. All Rights Reserved | <a href="about.html">About Us</a> | <a href="contact.html">Contact Us</a></p>
+						<p class="mb-0 fs-6 text-muted mt-1">© 2026 ALLMOVIESHUB. All Rights Reserved | <a
+								href="about.html">About Us</a> | <a href="contact.html">Contact Us</a></p>
 					</div>
 				</div>
 			</div>
@@ -229,55 +237,87 @@
 				document.body.style.paddingTop = '0'
 			}
 		}
-		
+
 		// call api start
-		const API_URL = "https://uclgqz3jwt6iihy76dnncajgoy0twdqm.lambda-url.ap-south-1.on.aws/"; // Your API URL
+		const API_URL = "https://uclgqz3jwt6iihy76dnncajgoy0twdqm.lambda-url.ap-south-1.on.aws/";
+		const container = document.getElementById("movieContainer");
+
+		// Show Skeleton Loader
+		function showSkeleton(count = 8) {
+			let html = "";
+
+			for (let i = 0; i < count; i++) {
+				html += `
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="skeleton-card">
+                    <div class="skeleton-img"></div>
+
+                    <div class="p-3">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+			}
+
+			container.innerHTML = html;
+		}
 
 		async function loadMovies() {
+
+			// Display skeleton first
+			showSkeleton();
+
 			try {
 				const response = await fetch(API_URL);
 				const movies = await response.json();
 
-				const container = document.getElementById("movieContainer");
-				container.innerHTML = "";
+				let html = "";
 
 				movies.forEach(movie => {
-					container.innerHTML += `
-						<div class="col-md-3 mb-4">
-							<div class="upcome_2i1 clearfix position-relative">
-								<div class="upcome_2i1i clearfix">
-									<img src="${movie.image}" class="w-100" alt="${movie.title}">
-								</div>
+					html += `
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="upcome_2i1 clearfix position-relative">
+                        <div class="upcome_2i1i clearfix">
+                            <img src="${movie.image}" class="w-100" alt="${movie.title}">
+                        </div>
 
-								<div class="upcome_2i1i1 clearfix position-absolute top-0 text-center w-100">
-									<h6 class="text-uppercase">
-										<a class="button_1" href="${movie.link}" target="_blank">
-											View
-										</a>
-									</h6>
-								</div>
-							</div>
+                        <div class="upcome_2i1i1 clearfix position-absolute top-0 text-center w-100">
+                            <h6 class="text-uppercase">
+                                <a class="button_1" href="${movie.link}" target="_blank">
+                                    View
+                                </a>
+                            </h6>
+                        </div>
+                    </div>
 
-							<div class="upcome_2i_last bg-white p-3">
-								<div class="upcome_2i_lastil">
-									<h5>
-										<a href="${movie.link}" target="_blank">
-											${movie.title}
-										</a>
-									</h5>
-								</div>
-							</div>
-						</div>
-					`;
+                    <div class="upcome_2i_last bg-white p-3">
+                        <div class="upcome_2i_lastil">
+                            <h5>
+                                <a href="${movie.link}" target="_blank">
+                                    ${movie.title}
+                                </a>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            `;
 				});
 
-			} catch (error) {
-				console.error("Error loading movies:", error);
+				container.innerHTML = html;
+
+			} catch (err) {
+				container.innerHTML = `
+            <div class="col-12 text-center text-danger py-5">
+                Failed to load movies.
+            </div>
+        `;
+				console.error(err);
 			}
 		}
 
 		loadMovies();
-
 		// call api end
 		// search fun start
 		const searchInput = document.getElementById("searchInput");
